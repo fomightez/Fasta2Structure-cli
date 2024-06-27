@@ -131,23 +131,138 @@ def browse_files():
             progress_label.configure(text="An error occurred during the conversion process.")
 
     threading.Thread(target=process_files).start()
-###------------ END OF original top mainly form unimproved code--------------###
+###------------ END OF original top, mainly from unimproved code--------------###
 ################################################################################
 
+###-------------------HELPER FUNCTIONS by Wayne for non-GUI use---------------###
+def generate_output_file_name(file_name):
+    '''
+    Takes a file name as an argument and returns string for the name of the
+    output file. The generated name is based on the original file
+    name.
 
-# Check if the script is running in a terminal
-is_terminal = sys.stdin.isatty()
+    Specific example
+    ================
+    Calling function with
+        ("ITS.fas")
+    returns
+        "ITS_Structure.str
+    '''
+    main_part_of_name, file_extension = os.path.splitext(
+        file_name) #from http://stackoverflow.com/questions/541390/extracting-extension-from-filename-in-python
+    if '.' in file_name:  #I don't know if this is needed with the os.path.splitext method but I had it before so left it
+        return main_part_of_name + "_Structure" + ".str"
+    else:
+        return file_name + ".str"
 
-# Check if Tkinter is installed
+def parse_inputs(inputs):
+    fasta_files_in_directory = []
+    for input_item in inputs:
+        if os.path.isdir(input_item):
+            # If it's a directory, add all .fa and .fasta files in it
+            fasta_files.extend([os.path.join(input_item, f) for f in os.listdir(input_item) 
+                                if f.endswith(('.fa', '.fasta', '.fas'))])
+        elif os.path.isfile(input_item) and input_item.endswith(('.fa', '.fasta', '.fas')):
+            # If it's a file with the correct extension, add it
+            fasta_files.append(input_item)
+        else:
+            print(f"Warning: '{input_item}' is not a valid FASTA file or directory. Skipping.")
+    
+    return fasta_files
+
+def process_related_fastas(filepaths):
+    sequence_dict = {}
+    variable_sites_per_file = []
+    for i, filepath in enumerate(filepaths):
+        variable_sites_count = process_fasta_file(filepath, sequence_dict, i, lambda x: None)
+        variable_sites_per_file.append(variable_sites_count)
+
+    pad_missing_sequences(sequence_dict, variable_sites_per_file)
+    concatenated_results = concatenate_results(sequence_dict)
+
+    output_filename = "Structure.str"
+    with open(output_filename, "w") as output_file:
+        output_file.write(concatenated_results)
+    print(f"Converted files saved as: {output_filename}")
+
+def process_single_fasta(filepath):
+    sequence_dict = {}
+    variable_sites_count = process_fasta_file(filepath, sequence_dict, 0, lambda x: None)
+    
+    pad_missing_sequences(sequence_dict, [variable_sites_count])
+    concatenated_results = concatenate_results(sequence_dict)
+
+    output_filename = f"{os.path.splitext(os.path.basename(filepath))[0]}_Structure.str"
+    with open(output_filename, "w") as output_file:
+        output_file.write(concatenated_results)
+    print(f"Converted file saved as: {output_filename}")
+
+###---------END OF HELPER FUNCTIONS by Wayne for non-GUI use-----------------###
+###---------END OF HELPER FUNCTIONS by Wayne for non-GUI use-----------------###
+
+
+# Decide to use GUI interface or stick to stdin, stderr, stdout as interface. Give feedback if not providing arguments
+# Check if the script is running in a terminal or situation like inside Jupyter, i.e., if Tkinter cannot connect to a graphical display. 
+# FULL DESCRIPTION OF SITUATION: Tkinter is installed and importable because it is part of the standard library, but if the original Fasta2Structure.py script (https://github.com/AdamBessa/Fasta2Structure/blob/9721bb545a8277c3ddbca74bc987e89563475bce/Fasta2Structure.py) is run on the command line with `python Fasta2Structure.py` or in Jupyter with `%run Fasta2Structure.py`,it gives `_tkinter.TclError: no display name and no $DISPLAY environment variable` because it cannot initialize a graphical window due to the absence of a display server connection." In this situatuon I then want to run using arguments to specify the file or directory to act on. If there is no arguments, then display USAGE/help via argparse.
 try:
-    root = tkinter.Tk()
-    tkinter_installed = True
-    root.withdraw()  # Hide the Tk window
-except (tkinter.TclError, ModuleNotFoundError):
-    tkinter_installed = False
+    root = tk.Tk()
+    Tkinter_can_connect_to_graphical_display= True
+    root.withdraw()  # Destroy the test Tk window
+except (tk.TclError): # handle the error `_tkinter.TclError: no display name and no $DISPLAY environment variable` when running in command line where Tkinter GUI cannot start up properly
+    Tkinter_can_connect_to_graphical_display = False
 
-# If the script is running in a terminal and Tkinter is installed and no arguments provided, run the GUI
-if is_terminal and tkinter_installed and len(sys.argv) == 1:
+
+# Set up for Usgae/help and handling input arguments
+import argparse
+import textwrap
+
+description = textwrap.dedent("""\
+    improved_Fasta2Structure.py converts Multiple Aligned FASTA Files to STRUCTURE Format.
+    It can be used in two ways:
+    1. GUI mode: When run without arguments in a desktop environment, it launches a GUI.
+    2. Command-line mode: Used with arguments to process FASTA files directly.
+
+    Command-line usage examples:
+    - Single multi--sequence FASTA file: python improved_Fasta2Structure.py my_fasta.fa
+    - Multiple related FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa
+    - Directory with independent FASTA files: python improved_Fasta2Structure.py path/to/fasta/directory
+    Jupyter usage examples:
+    - Single multi--sequence FASTA file: %run improved_Fasta2Structure.py my_fasta.fa
+    - Multiple related FASTA files: %run improved_Fasta2Structure.py file1.fa file2.fa file3.fa
+    - Directory with independent FASTA files: %run improved_Fasta2Structure.py path/to/fasta/directory
+
+    **** GUI & main script by Adam Bessa-Silva; CLI adaptation by Wayne Decatur (fomightez @ github) ***
+    """)
+
+parser = argparse.ArgumentParser(
+    prog='improved_Fasta2Structure.py',
+    description=description,
+    formatter_class=argparse.RawDescriptionHelpFormatter
+)
+
+parser.add_argument("input", nargs='+', help="FASTA file or files or directory \
+    containing FASTA files. FASTA files in a directory will be treated as independent, as if you had provided each one at a time when invoking the script. Multiple FASTA files input indiviudal will be treated as related and the results concatenated.", metavar="INPUT_FASTA")
+
+# Parse the arguments
+args = parser.parse_args()
+
+'''I THINK ARGE PARST HANDLES THIS?!?! AUTMATICALLY?!?!
+# If the script has been called and user has put `-h` or `--help` flag print the USAGE info (Don't care if Tkinter can or cannot connect to graphical display at this point because obviously user wants USAGE info/help)
+if len(sys.argv)==2:    #from http://stackoverflow.com/questions/4042452/display-help-message-with-python-argparse-when-script-is-called-without-any-argu
+    parser.print_help()
+    sys.exit(1)
+'''
+
+# If the script is running in a terminal/on command line or in Jupyter and so Tkinter cannot connect to a graphical display and no arguments are provided into the call to the script, then print general USAGE info
+if (not Tkinter_can_connect_to_graphical_display) and not args.input:
+    parser.print_help()
+    sys.exit(1)
+
+
+
+
+# If the script is called and no arguments are provided and TKINTER CAN CONNECT TO A GRAPHICAL DISPLAY, run the GUI
+if Tkinter_can_connect_to_graphical_display and len(sys.argv) == 1:
     # The original Tkinter code from https://github.com/AdamBessa/Fasta2Structure/blob/9721bb545a8277c3ddbca74bc987e89563475bce/Fasta2Structure.py here
     root = tk.Tk()
     root.title("Fasta to Structure")
@@ -165,13 +280,41 @@ if is_terminal and tkinter_installed and len(sys.argv) == 1:
     output_label.pack(pady=10)
 
     root.mainloop()
+# Since arguments were provided when the script, which we know because at this point we've already dealt with all the possibilities when no arguments provided, that is the file or directory the user wants to act on, and so we should continue on acting on that sticking to using stdin, stderr, and stdout for interaction. We don't need to concern ourselves with if Tkinter can connect to a graphical display because we should now have all the information that the windowed interface facilitates determining in the GUI situation.
 else:
-    # The section handling the converstion without using Tkinter
+    # The section handling the conversion without using Tkinter GUI, i.e. CLI mode section.
+    # if more than one input file is provided, treat them as related, the way the
+    # original file iterated on them with `for i, filepath in enumerate(filepaths):`
+    # accumulating variable sites from each file.
+    # Otherwise check if provided argument is a directory and then process each FASTA in as if separate, or just process the one FASTA file as multi-sequence.
     filepaths = sys.argv[1:]
     if not filepaths:
         print("No FASTA files provided. Please provide one or more FASTA file paths as command-line arguments or a path to a directory holding FASTA files to convert.")
         sys.exit(1)
+    if len(args.input) > 1:
+        # Multiple input files, treat them as related
+        process_related_fastas(args.input)
+    elif os.path.isdir(args.input[0]):
+        # Input is a directory, process each FASTA file separately
+        fasta_files = [os.path.join(args.input[0], f) for f in os.listdir(args.input[0]) 
+                       if f.endswith(('.fa', '.fasta', '.fas'))]
+        for fasta_file in fasta_files:
+            process_single_fasta(fasta_file)
+    else:
+        # Single input file, process it as a multi-sequence FASTA
+        process_single_fasta(args.input[0])
 
+    
+
+
+
+
+
+
+
+
+
+    '''
     sequence_dict = {}
     variable_sites_per_file = []
 
@@ -182,8 +325,10 @@ else:
     pad_missing_sequences(sequence_dict, variable_sites_per_file)
     concatenated_results = concatenate_results(sequence_dict)
 
-    output_filename = "Structure.str"
+    #output_filename = "Structure.str"
+    output_filename = generate_output_file_name(input_file)
     with open(output_filename, "w") as output_file:
         output_file.write(concatenated_results)
 
     print(f"Converted files saved as: {output_filename}")
+    '''
