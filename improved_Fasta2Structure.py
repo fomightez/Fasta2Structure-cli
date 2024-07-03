@@ -155,6 +155,15 @@ def generate_output_file_name(file_name):
     else:
         return file_name + ".str"
 
+def make_temp_filename(filepaths):
+    '''
+    Takes a list of filepaths and makes a file name that nothing should match 
+    based on that and uuid use.
+    '''
+    import uuid
+    return "tmp{}{}.fa".format(
+        os.path.splitext(os.path.basename(filepaths[0]))[0],uuid.uuid4().time)
+
 def parse_inputs(inputs):
     fasta_files_in_directory = []
     for input_item in inputs:
@@ -171,19 +180,41 @@ def parse_inputs(inputs):
     return fasta_files
 
 def process_related_fastas(filepaths):
+    ''' I BELIEVE THIS IS WHAT THE original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):`, but I found no content aside from names from description line in the output
     sequence_dict = {}
     variable_sites_per_file = []
     for i, filepath in enumerate(filepaths):
-        variable_sites_count = process_fasta_file(filepath, sequence_dict, i, lambda x: None)
+        variable_sites_count = process_fasta_file(filepath, sequence_dict, 0, lambda x: None)
         variable_sites_per_file.append(variable_sites_count)
 
     pad_missing_sequences(sequence_dict, variable_sites_per_file)
+    concatenated_results = concatenate_results(sequence_dict)
+    output_filename = "Structure.str"
+    with open(output_filename, "w") as output_file:
+        output_file.write(concatenated_results)
+    '''
+    tmp_filename = make_temp_filename(filepaths)
+    # Put together related sequences and save as tmp_filename (doing this way because I cannot tell what original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):` & when I did that as part of the script [see in this function, just above this block] it didn't seem to work)
+    combined_content=""
+    for fp in filepaths:
+        with open(fp, 'r') as thefile:
+            combined_content+=thefile.read()+"\n"
+    with open(tmp_filename, "w") as output_file:
+        output_file.write(combined_content)
+
+    # Process content of saved temp_filename
+    sequence_dict = {}
+    variable_sites_count = process_fasta_file(tmp_filename, sequence_dict, 0, lambda x: None)
+    
+    pad_missing_sequences(sequence_dict, [variable_sites_count])
     concatenated_results = concatenate_results(sequence_dict)
 
     output_filename = "Structure.str"
     with open(output_filename, "w") as output_file:
         output_file.write(concatenated_results)
     print(f"Converted files saved as: {output_filename}")
+    os.remove(tmp_filename) # delete the temporary file
+
 
 def process_single_fasta(filepath):
     sequence_dict = {}
@@ -222,14 +253,26 @@ description = textwrap.dedent("""\
     1. GUI mode: When run without arguments in a desktop environment, it launches a GUI.
     2. Command-line mode: Used with arguments to process FASTA files directly.
 
+    Command-line mode means it can run where used on a remote server without a grahical 
+    display serving Jupyter (headless) or integrated into workflow managment tools like
+    Snakemake & NextFlow.
+
     Command-line usage examples:
     - Single multi--sequence FASTA file: python improved_Fasta2Structure.py my_fasta.fa
     - Multiple related FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa
     - Directory with independent FASTA files: python improved_Fasta2Structure.py path/to/fasta/directory
-    Jupyter usage examples:
-    - Single multi--sequence FASTA file: %run improved_Fasta2Structure.py my_fasta.fa
+
+    Jupyter usage examples for situations where graphical display not connected or opting for text-based only:
+    - Single multi-sequence FASTA file: %run improved_Fasta2Structure.py my_fasta.fa
     - Multiple related FASTA files: %run improved_Fasta2Structure.py file1.fa file2.fa file3.fa
     - Directory with independent FASTA files: %run improved_Fasta2Structure.py path/to/fasta/directory
+
+    Specific CLI usage for INCLUDED examples (swap `python` for `%run` for Jupyter):
+    - Single multi--sequence FASTA file: python improved_Fasta2Structure.py Example_data/Datasets/ITS.fas
+    - Multiple related FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/related_individual_files/AgALC20_1.fa Example_data/Datasets/related_individual_files/AgMRJ27_1.fa Example_data/Datasets/related_individual_files/AgPAa21_1.fa Example_data/Datasets/related_individual_files/AgPNB19_1.fa
+    - Directory with independent FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/
+
+
 
     **** GUI & main script by Adam Bessa-Silva; CLI adaptation by Wayne Decatur (fomightez @ github) ***
     """)
@@ -246,14 +289,16 @@ parser.add_argument("input", nargs='+', help="FASTA file or files or directory \
 # Parse the arguments
 args = parser.parse_args()
 
-'''I THINK ARGE PARST HANDLES THIS?!?! AUTMATICALLY?!?!
-# If the script has been called and user has put `-h` or `--help` flag print the USAGE info (Don't care if Tkinter can or cannot connect to graphical display at this point because obviously user wants USAGE info/help)
-if len(sys.argv)==2:    #from http://stackoverflow.com/questions/4042452/display-help-message-with-python-argparse-when-script-is-called-without-any-argu
-    parser.print_help()
-    sys.exit(1)
+'''
+argeparse automatically handles if user calls the script with `-h` or `--help` flag and prints the USAGE.
+
+Other triggers for USAGE to display:
+- Tkinter cannot connect to a graphical display and no arguments are provided
+
+The GUI will run if a graphical display can be connected to by Tkinter and the script is called with no arguments.
 '''
 
-# If the script is running in a terminal/on command line or in Jupyter and so Tkinter cannot connect to a graphical display and no arguments are provided into the call to the script, then print general USAGE info
+# If the script is running in a terminal/on command line or in Jupyter run headlessly and so Tkinter cannot connect to a graphical display and no arguments are provided into the call to the script, then print general USAGE info
 if (not Tkinter_can_connect_to_graphical_display) and not args.input:
     parser.print_help()
     sys.exit(1)
@@ -304,31 +349,3 @@ else:
         # Single input file, process it as a multi-sequence FASTA
         process_single_fasta(args.input[0])
 
-    
-
-
-
-
-
-
-
-
-
-    '''
-    sequence_dict = {}
-    variable_sites_per_file = []
-
-    for i, filepath in enumerate(filepaths):
-        variable_sites_count = process_fasta_file(filepath, sequence_dict, i, lambda value: print(f"Processing file {i + 1}/{len(filepaths)} ({value} variable sites)"))
-        variable_sites_per_file.append(variable_sites_count)
-
-    pad_missing_sequences(sequence_dict, variable_sites_per_file)
-    concatenated_results = concatenate_results(sequence_dict)
-
-    #output_filename = "Structure.str"
-    output_filename = generate_output_file_name(input_file)
-    with open(output_filename, "w") as output_file:
-        output_file.write(concatenated_results)
-
-    print(f"Converted files saved as: {output_filename}")
-    '''

@@ -10,10 +10,10 @@ Please see [the official Fasta2Structure repository](https://github.com/AdamBess
 
 
 # Fasta2Structure-cli
-Fasta2Structure: A User-Friendly Tool for Converting Multiple Aligned FASTA Files to STRUCTURE Format, that is even more user-friendly because it doesn't need Tkinter and can this run well anywhere, such as on a computer cluster or in modern Jupyter.  
+Fasta2Structure: A User-Friendly Tool for Converting Multiple Aligned FASTA Files to STRUCTURE Format, that is even more user-friendly because it doesn't need Tkinter and can thus run well anywhere, such as on a computer cluster or in Jupyter running remotely or in conjunction with software to make pipelines like Snakemake & NextFlow.  
 Plus, combined with Jupyter served by the MyBinder service it will make it easier for anyone to try the software or use it without installing anything on their own computer.  
 
-To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce Fasta2Structure-cli.  
+To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce Fasta2Structure-cli. It will run on the command line if you supply arguments specifying files as input or fallback to running on the command line if Tkinter cannot connect to a graphical display.    
 You can still try the original Tkinter-based software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here.
 
 I **WILL DO(delete this note when done)** have added tests to make sure the Fasta2Structure-cli gives the same result as the Tkinter-based software presently available at https://github.com/AdamBessa/Fasta2Structure.
