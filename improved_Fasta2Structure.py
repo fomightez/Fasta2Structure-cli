@@ -179,7 +179,7 @@ def parse_inputs(inputs):
     
     return fasta_files
 
-def process_related_fastas(filepaths):
+#def process_multiple_fastas_together(filepaths):
     ''' I BELIEVE THIS IS WHAT THE original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):`, but I found no content aside from names from description line in the output
     sequence_dict = {}
     variable_sites_per_file = []
@@ -193,8 +193,9 @@ def process_related_fastas(filepaths):
     with open(output_filename, "w") as output_file:
         output_file.write(concatenated_results)
     '''
+    ''''THIS IS WHAT I HAD BEFORE I REALIZED I NEED TO LET UNRELATED BE USED AND WANT TO BEST MATCH HOW GUI DIRECTLY HANDLES THINGS
     tmp_filename = make_temp_filename(filepaths)
-    # Put together related sequences and save as tmp_filename (doing this way because I cannot tell what original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):` & when I did that as part of the script [see in this function, just above this block] it didn't seem to work)
+    # Put together the indicated equences and save as tmp_filename (doing this way because I cannot tell what original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):` & when I did that as part of the script [see in this function, just above this block] it didn't seem to work)
     combined_content=""
     for fp in filepaths:
         with open(fp, 'r') as thefile:
@@ -214,6 +215,29 @@ def process_related_fastas(filepaths):
         output_file.write(concatenated_results)
     print(f"Converted files saved as: {output_filename}")
     os.remove(tmp_filename) # delete the temporary file
+    '''
+def process_multiple_fastas_together(filepaths):
+    sequence_dict = {}
+    variable_sites_per_file = []
+
+    for i, filepath in enumerate(filepaths):
+        file_sequence_dict = {}
+        variable_sites_count = process_fasta_file(filepath, file_sequence_dict, i, lambda x: None)
+        variable_sites_per_file.append(variable_sites_count)
+
+        # Merge file_sequence_dict into the main sequence_dict
+        for seq_id, sequences in file_sequence_dict.items():
+            if seq_id not in sequence_dict:
+                sequence_dict[seq_id] = {}
+            sequence_dict[seq_id].update(sequences)
+
+    pad_missing_sequences(sequence_dict, variable_sites_per_file)
+    concatenated_results = concatenate_results(sequence_dict)
+
+    output_filename = "Structure.str"
+    with open(output_filename, "w") as output_file:
+        output_file.write(concatenated_results)
+    print(f"Converted files saved as: {output_filename}")
 
 
 def process_single_fasta(filepath):
@@ -258,19 +282,19 @@ description = textwrap.dedent("""\
     Snakemake & NextFlow.
 
     Command-line usage examples:
-    - Single multi--sequence FASTA file: python improved_Fasta2Structure.py my_fasta.fa
-    - Multiple related FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa
-    - Directory with independent FASTA files: python improved_Fasta2Structure.py path/to/fasta/directory
+    - Single multi-sequence FASTA file: python improved_Fasta2Structure.py my_fasta.fa
+    - Multiple FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa (I THINK ORDER MATTERS BUT NOT 100% SURE YET BECAUSE A PAIN TO TEST IN GUI.)
+    - Directory with FASTA files: python improved_Fasta2Structure.py path/to/fasta/directory
 
     Jupyter usage examples for situations where graphical display not connected or opting for text-based only:
     - Single multi-sequence FASTA file: %run improved_Fasta2Structure.py my_fasta.fa
-    - Multiple related FASTA files: %run improved_Fasta2Structure.py file1.fa file2.fa file3.fa
-    - Directory with independent FASTA files: %run improved_Fasta2Structure.py path/to/fasta/directory
+    - Multiple FASTA files: %run improved_Fasta2Structure.py file1.fa file2.fa file3.fa
+    - Directory with FASTA files: %run improved_Fasta2Structure.py path/to/fasta/directory
 
     Specific CLI usage for INCLUDED examples (swap `python` for `%run` for Jupyter):
-    - Single multi--sequence FASTA file: python improved_Fasta2Structure.py Example_data/Datasets/ITS.fas
-    - Multiple related FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/related_individual_files/AgALC20_1.fa Example_data/Datasets/related_individual_files/AgMRJ27_1.fa Example_data/Datasets/related_individual_files/AgPAa21_1.fa Example_data/Datasets/related_individual_files/AgPNB19_1.fa
-    - Directory with independent FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/
+    - Single multi-sequence FASTA file: python improved_Fasta2Structure.py Example_data/Datasets/ITS.fas
+    - Multiple FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/ITS.fas Example_data/Datasets/trnD-trnT.fas Example_data/Datasets/trnH-trnK.fas 
+    - Directory with FASTA files: python improved_Fasta2Structure.py Example_data/Datasets/
 
 
 
@@ -282,9 +306,10 @@ parser = argparse.ArgumentParser(
     description=description,
     formatter_class=argparse.RawDescriptionHelpFormatter
 )
-
-parser.add_argument("input", nargs='+', help="FASTA file or files or directory \
-    containing FASTA files. FASTA files in a directory will be treated as independent, as if you had provided each one at a time when invoking the script. Multiple FASTA files input indiviudal will be treated as related and the results concatenated.", metavar="INPUT_FASTA")
+fasta_extensions_allowed = ('.fa', '.fasta', '.fas')
+fasta_extensions_allowed_text_for_help = "'" + "', '".join(fasta_extensions_allowed[:-1]) + "', or '" + fasta_extensions_allowed[-1] + "'"
+parser.add_argument("input", nargs='+', help=f"FASTA file or files or directory \
+    containing FASTA files. FASTA files in a directory (with extensions {fasta_extensions_allowed_text_for_help}) will be treated as if all of the filepaths for each had been provided when invoking the script. Multiple FASTA files provided in arguments will be processed in the same manner as if all selected at the same time by the GUI interface of the original `Fasta2Structure.py` NOTE, I THINK ORDER MATTERS BUT NOT 100% SURE YET BECAUSE A PAIN TO TEST IN GUI.", metavar="INPUT_FASTA")
 
 # Parse the arguments
 args = parser.parse_args()
@@ -337,15 +362,18 @@ else:
         print("No FASTA files provided. Please provide one or more FASTA file paths as command-line arguments or a path to a directory holding FASTA files to convert.")
         sys.exit(1)
     if len(args.input) > 1:
-        # Multiple input files, treat them as related
-        process_related_fastas(args.input)
+        # Multiple input files, process them as the GUI does if specify three unrelated alignments 
+        logging.info(f'{len(args.input)} FASTA files selected.')
+        process_multiple_fastas_together(args.input)
     elif os.path.isdir(args.input[0]):
-        # Input is a directory, process each FASTA file separately
+        # Input is a directory, process all FASTAs together like if each found 
+        # provided filepath
         fasta_files = [os.path.join(args.input[0], f) for f in os.listdir(args.input[0]) 
-                       if f.endswith(('.fa', '.fasta', '.fas'))]
-        for fasta_file in fasta_files:
-            process_single_fasta(fasta_file)
+                       if f.endswith(fasta_extensions_allowed)]
+        logging.info(f'{len(fasta_files)} FASTA files selected.')
+        process_multiple_fastas_together(fasta_files)
     else:
         # Single input file, process it as a multi-sequence FASTA
+        logging.info(f'{len(args.input[0])} FASTA files selected.')
         process_single_fasta(args.input[0])
 
