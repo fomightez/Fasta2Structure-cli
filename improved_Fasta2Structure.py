@@ -179,43 +179,6 @@ def parse_inputs(inputs):
     
     return fasta_files
 
-#def process_multiple_fastas_together(filepaths):
-    ''' I BELIEVE THIS IS WHAT THE original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):`, but I found no content aside from names from description line in the output
-    sequence_dict = {}
-    variable_sites_per_file = []
-    for i, filepath in enumerate(filepaths):
-        variable_sites_count = process_fasta_file(filepath, sequence_dict, 0, lambda x: None)
-        variable_sites_per_file.append(variable_sites_count)
-
-    pad_missing_sequences(sequence_dict, variable_sites_per_file)
-    concatenated_results = concatenate_results(sequence_dict)
-    output_filename = "Structure.str"
-    with open(output_filename, "w") as output_file:
-        output_file.write(concatenated_results)
-    '''
-    ''''THIS IS WHAT I HAD BEFORE I REALIZED I NEED TO LET UNRELATED BE USED AND WANT TO BEST MATCH HOW GUI DIRECTLY HANDLES THINGS
-    tmp_filename = make_temp_filename(filepaths)
-    # Put together the indicated equences and save as tmp_filename (doing this way because I cannot tell what original `Fasta2Structure.py` script was doing in section under `for i, filepath in enumerate(filepaths):` & when I did that as part of the script [see in this function, just above this block] it didn't seem to work)
-    combined_content=""
-    for fp in filepaths:
-        with open(fp, 'r') as thefile:
-            combined_content+=thefile.read()+"\n"
-    with open(tmp_filename, "w") as output_file:
-        output_file.write(combined_content)
-
-    # Process content of saved temp_filename
-    sequence_dict = {}
-    variable_sites_count = process_fasta_file(tmp_filename, sequence_dict, 0, lambda x: None)
-    
-    pad_missing_sequences(sequence_dict, [variable_sites_count])
-    concatenated_results = concatenate_results(sequence_dict)
-
-    output_filename = "Structure.str"
-    with open(output_filename, "w") as output_file:
-        output_file.write(concatenated_results)
-    print(f"Converted files saved as: {output_filename}")
-    os.remove(tmp_filename) # delete the temporary file
-    '''
 def process_multiple_fastas_together(filepaths):
     sequence_dict = {}
     variable_sites_per_file = []
