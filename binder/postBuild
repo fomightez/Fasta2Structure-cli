@@ -1,42 +1,46 @@
 #!/bin/bash
 
+# I realized I the dataset data even though being from different genes, is meant to be 
+# selected all at same time in demo and so I don't need to make related files to demo
+# those separate, but this could be useful code and SO JUST COMMENTING OUT FOR NOW
+
 #***----------------------------------------------------------------------------------***#
 # MAKE FOUR RELATED FASTA FILES
 #***----------------------------------------------------------------------------------***#
 # Make a directory for multiple related FASTA files to be stored under 'Example_data'
-mkdir ./Example_data/Datasets/related_individual_files
+#mkdir ./Example_data/Datasets/related_individual_files
 
 # Split up multisequence example in `Example_data/Datasets` to make multiple related FASTA files in 
 # the new directory `related_individual_files`, based on https://www.biostars.org/p/9461227/#9461227 (I planned to use Jim Kent's `faSplit` but when I ran `./faSplit sequence Example_data/Datasets/ITS.fas 588 ITS_ind` it only produced 565 files when there should be 588 -- explanation when I looked was example where it kept `AgMRJ30_1` and `AgMRJ30_2` together and so it seems it is too smart and keeping related files together. [I suspect it may be related to 'regions' concept because when I looked at using `faidx` that comes intalled when you get the `pyfaidx` package it had for the `--split-files` flag "write each region to a separate file (names are derived from regions)".] THAT AND `FAIDX` COULD BE POTENTIALLY USEFUL. But here I was looking for a dumber approach that just split them.)
 # the awk command offered there didn't deal with with carriage returns I was seeing at end of the description line and so this one filters them out
-mkdir -p split_sequences
-count=0
-filename=""
-while IFS= read -r line; do
-    if [[ $line == ">"* ]]; then
-        # Extract the sequence ID
-        id=$(echo "$line" | sed 's/^>//;s/[^a-zA-Z0-9_].*$//')
-        if [[ -n "$id" ]]; then
-            filename="split_sequences/${id}.fa"
-            echo "Creating file: $filename"
-            echo "$line" > "$filename"
-            ((count++))
-        else
-            echo "WARNING: Found header line with no valid identifier: $line"
-            filename=""
-        fi
-    elif [[ -n "$filename" ]]; then
-        echo "$line" >> "$filename"
-    else
-        echo "WARNING: Found sequence data outside of a valid sequence: $line"
-    fi
-done < <(sed 's/\r//g' Example_data/Datasets/ITS.fas)
+#mkdir -p split_sequences
+#count=0
+#filename=""
+#while IFS= read -r line; do
+#    if [[ $line == ">"* ]]; then
+#        # Extract the sequence ID
+#        id=$(echo "$line" | sed 's/^>//;s/[^a-zA-Z0-9_].*$//')
+#        if [[ -n "$id" ]]; then
+#            filename="split_sequences/${id}.fa"
+#            echo "Creating file: $filename"
+#            echo "$line" > "$filename"
+#            ((count++))
+#        else
+#            echo "WARNING: Found header line with no valid identifier: $line"
+#            filename=""
+#        fi
+#    elif [[ -n "$filename" ]]; then
+#        echo "$line" >> "$filename"
+#    else
+#        echo "WARNING: Found sequence data outside of a valid sequence: $line"
+#    fi
+#done < <(sed 's/\r//g' Example_data/Datasets/ITS.fas)
 
 # Move four of those to `Example_data/Datasets/related_individual_files`
-mv split_sequences/AgALC20_1.fa split_sequences/AgMRJ27_1.fa split_sequences/AgPAa21_1.fa split_sequences/AgPNB19_1.fa Example_data/Datasets/related_individual_files/
+#mv split_sequences/AgALC20_1.fa split_sequences/AgMRJ27_1.fa split_sequences/AgPAa21_1.fa split_sequences/AgPNB19_1.fa Example_data/Datasets/related_individual_files/
 
 # remove the `split_sequences` directory I used to unpack all in ITS.fas
-rm -rf split_sequences
+#rm -rf split_sequences
 #***---------------End of MAKE FOUR RELATED FASTA FILES------------------------------***#
 
 
