@@ -246,7 +246,7 @@ description = textwrap.dedent("""\
 
     Command-line usage examples:
     - Single multi-sequence FASTA file: python improved_Fasta2Structure.py my_fasta.fa
-    - Multiple FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa (I THINK ORDER MATTERS BUT NOT 100% SURE YET BECAUSE A PAIN TO TEST IN GUI.)
+    - Multiple FASTA files: python improved_Fasta2Structure.py file1.fa file2.fa file3.fa 
     - Directory with FASTA files: python improved_Fasta2Structure.py path/to/fasta/directory
 
     Jupyter usage examples for situations where graphical display not connected or opting for text-based only:
@@ -272,13 +272,13 @@ parser = argparse.ArgumentParser(
 fasta_extensions_allowed = ('.fa', '.fasta', '.fas')
 fasta_extensions_allowed_text_for_help = "'" + "', '".join(fasta_extensions_allowed[:-1]) + "', or '" + fasta_extensions_allowed[-1] + "'"
 parser.add_argument("input", nargs='+', help=f"FASTA file or files or directory \
-    containing FASTA files. FASTA files in a directory (with extensions {fasta_extensions_allowed_text_for_help}) will be treated as if all of the filepaths for each had been provided when invoking the script. Multiple FASTA files provided in arguments will be processed in the same manner as if all selected at the same time by the GUI interface of the original `Fasta2Structure.py` NOTE, I THINK ORDER MATTERS BUT NOT 100% SURE YET BECAUSE A PAIN TO TEST IN GUI.", metavar="INPUT_FASTA")
+    containing FASTA files. FASTA files in a directory (with extensions {fasta_extensions_allowed_text_for_help}) will be treated as if all of the filepaths for each had been provided when invoking the script. Multiple FASTA files provided in arguments will be processed in the same manner as if all selected at the same time by the GUI interface of the original `Fasta2Structure.py` NOTE: to get the output to match what the GUI gives, supply the filepaths as arguments left to rigth to match what the GUI would have top to bottom.", metavar="INPUT_FASTA")
 
 # Parse the arguments
 args = parser.parse_args()
 
 '''
-argeparse automatically handles if user calls the script with `-h` or `--help` flag and prints the USAGE.
+argparse automatically handles if user calls the script with `-h` or `--help` flag and prints the USAGE.
 
 Other triggers for USAGE to display:
 - Tkinter cannot connect to a graphical display and no arguments are provided
