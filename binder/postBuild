@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# I realized I the dataset data even though being from different genes, is meant to be 
+# I realized the dataset data, even though being from different genes, is meant to be 
 # selected all at same time in demo and so I don't need to make related files to demo
 # those separate, but this could be useful code and SO JUST COMMENTING OUT FOR NOW
 
@@ -44,4 +44,20 @@
 #***---------------End of MAKE FOUR RELATED FASTA FILES------------------------------***#
 
 
+
+# Get the CURRENT provided results from the official repo so can compare with that I got 
+# when I forked, to see if it has been updated in any way since I argue in an issue filed
+# at https://github.com/AdamBessa/Fasta2Structure/issues/4
+# that `Example_data/Results/Structure.str` doesn't actually match real results.
+cd tests
+mkdir current_results_provided_by_Adam_Bessa && cd current_results_provided_by_Adam_Bessa
+!curl -OL https://raw.githubusercontent.com/AdamBessa/Fasta2Structure/main/Example_data/Results/Structure.str
+cd ~
+
+# Currently, in the issue https://github.com/AdamBessa/Fasta2Structure/issues/4 I point out
+# `Fasta2Structure.py` doesn't make a file with the header and the first row after the identifier
+# shown there. So I'd prefer to have the provided example match what it should for more 
+# accurate testing. This awk command will save a version of the that should match better to 
+# what current script ACTUALLY gives.
+awk 'NR>1 {printf "%s ", $1; for (i=3; i<=NF; i++) printf "%s%s", $i, (i==NF?"\n":OFS)}' Example_data/Results/Structure.str > Example_data/Results/WITHOUT_header_row_and_first_data_column_Structure.str
 
