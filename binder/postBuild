@@ -20,14 +20,43 @@ cd ~
 # accurate testing. This awk command will save a version of the that should match better to 
 # what current script ACTUALLY gives. (Specifically, it removes the first row, which are 
 # column names that I don't know the source of and it also removes the fist column after the
-# identifier, which I also don' know the source of.) The result of that I can then use to 
+# identifier, which I also don' know the source of. Plus, I think Adam BEssa's had tabs and 
+# I am not getting results out that have tabs. So fixes.) The result of that I can then use to 
 # compare to what improved script gives so that I can easily check going forward that 
 # changes to the script don't change the results.
-awk 'NR>1 {printf "%s", $1; for (i=3; i<=NF; i++) printf "%s%s", (i==3?"  ":" "), $i; printf "\n"}' Example_data/Results/Structure.str > Example_data/Results/EXPECTED_in_July2024_Structure.str
+: <<'END_COMMENT' # This section was way that worked but convoluted because done piecemeal and replaced with streamlined now after this 'here-document that is used as a multi-line comment' according to https://stackoverflow.com/a/46049228/8508004
+awk 'NR>1 {
+    printf "%s", $1;
+    for (i=3; i<=NF; i++) {
+        if ($i ~ /^-/) {
+            printf " %s", $i;
+        } else {
+            printf "  %s", $i;
+        }
+    }
+    #printf "\n";
+}' Example_data/Results/Structure.str > Example_data/Results/temp_output.str
+# Step 2: add standard lne endings to normalize (weird line endings diagnosed with `cat -A Example_data/Results/temp_output.str | tail -n 5` & `file Example_data/Results/temp_output.str`)
+tr '\r' '\n' < Example_data/Results/temp_output.str > Example_data/Results/temp_unix.str
+# Step 3:  add a space at the end of each line without adding a new line
+awk '{print $0 " "}' Example_data/Results/temp_unix.str > Example_data/Results/EXPECTED_in_July2024_Structure.str
+# Step 4:
+# Remove the temporary files
+rm Example_data/Results/temp_output.str
+rm Example_data/Results/temp_unix.str
+END_COMMENT
 
-
-
-
+awk 'NR>1 {
+    printf "%s", $1;
+    for (i=3; i<=NF; i++) {
+        if ($i ~ /^-/) {
+            printf " %s", $i;
+        } else {
+            printf "  %s", $i;
+        }
+    }
+    printf " \n";
+}' Example_data/Results/Structure.str | tr -d '\r' > Example_data/Results/EXPECTED_in_July2024_Structure.str
 
 
 # OLD BUT KEEPING BECAUSE USEFUL CODE WAS WORKING OUT AND NICE SPLITING A FILE WITH BASH ON A SYMBOL!!
