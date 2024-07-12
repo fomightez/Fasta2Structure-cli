@@ -25,9 +25,10 @@ cd ~
 # compare to what improved script gives so that I can easily check going forward that 
 # changes to the script don't change the results.
 # NOTE THAT EVEN THIS WORKED OUT PROCESS BELOW ENDED UP NOT BEING PERFECT BECAUSE IN MY HANDS 
-# WHEN I RUN `Fasta2Structure.py`  in GUI ON UNIX I SEE INCONSISTENT HANDLING OF SPACES 
-# SURROUNDING `-9` ENTRIES OUTPUT AND FOUND THAT IMPOSSIBLE TO REPLICATE. So fallback 
-# was to check content equality ignoring whitespace anyway but this got close.
+# WHEN I RUN `Fasta2Structure.py` in GUI ON UNIX I SEE INCONSISTENT HANDLING OF SPACES 
+# SURROUNDING `-9` ENTRIES OUTPUT AND FOUND THAT INCONSISTENCY IMPOSSIBLE TO REPLICATE TO
+# MAKE THE PROVIDED FILE LIKE I EXPECT. So fallback was to check content equality ignoring 
+# whitespace anyway but this worked out process below got close.
 : <<'END_COMMENT' # This COMMENTED OUT section was way that worked but convoluted, BUT INCLUDES MANY USEFUL TRICKS, because done piecemeal and replaced with streamlined now after this 'here-document that is used as a multi-line comment' according to https://stackoverflow.com/a/46049228/8508004
 awk 'NR>1 {
     printf "%s", $1;
