@@ -337,6 +337,6 @@ else:
         process_multiple_fastas_together(fasta_files)
     else:
         # Single input file, process it as a multi-sequence FASTA
-        logging.info(f'{len(args.input[0])} FASTA files selected.')
+        logging.info(f'{len(args.input)} FASTA files selected.')
         process_single_fasta(args.input[0])
 
