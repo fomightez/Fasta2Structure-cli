@@ -16,7 +16,7 @@ Plus, combined with Jupyter served by the MyBinder service it will make it easie
 To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce Fasta2Structure-cli. It will run on the command line if you supply arguments specifying files as input or fallback to running on the command line if Tkinter cannot connect to a graphical display.    
 You can still try the original GUI-based (Tkinter) software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here.
 
-I have added tests to make sure the Fasta2Structure-cli gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure.
+I have added a series of extensive tests to make sure the Fasta2Structure-cli gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure. 
 
 #### Background (from original source repo by Adam Bessa)
 
