@@ -178,10 +178,10 @@ def compare_log_info(file1_path, file2_path):
     # Because the tags were used for the dictionary the actual order of the 
     # content appearing in the logs is moot. It is just checking the associated
     # data from the same input file matches.
-    for tag,vs1 in tag_and_variable_sites_f1.items():
-        vs2 = tag_and_variable_sites_f2[tag]
+    for fastafile,vs1 in tag_and_variable_sites_f1.items():
+        vs2 = tag_and_variable_sites_f2[fastafile]
 
-        assert vs1 == vs2, f"Files have different details for variable sites concerning the `{tag}` pair: {sel1} vs {sel2}"
+        assert vs1 == vs2, f"Files have different details for variable sites concerning the `{fastafile}` pair: {sel1} vs {sel2}"
 
     return True  # If we get here, the files have same FASTA file number and variable sites info
 
