@@ -1,22 +1,24 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/Fasta2Structure-cli/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)
 
 ---------------
 Attribution
 ----------
-This fork of [the official Fasta2Structure repository](https://github.com/AdamBessa/Fasta2Structure) was set up to take advantage of the MyBinder system to offer a resource to run Fasta2Structure without the user needing to download, install, or maintain any software. Plus, no need to be running it in a typical desktop situation and so the Fasta2Structure script is more convenient to use pretty much anywhere. See [here](https://mybinder.readthedocs.io/en/latest/) for documentation about Binder as deployed at [MyBinder.org](https://mybinder.org/).  
+This fork of [the official Fasta2Structure repository](https://github.com/AdamBessa/Fasta2Structure) was set up to take advantage of the MyBinder system to offer a resource to run Fasta2Structure without the user needing to download, install, or maintain any software. Plus, no need to be running it in a typical desktop situation, and therefore the Fasta2Structure script is more convenient to use anywhere at scale. See [here](https://mybinder.readthedocs.io/en/latest/) for documentation about Binder as deployed at [MyBinder.org](https://mybinder.org/).  
 Please see [the official Fasta2Structure repository](https://github.com/AdamBessa/Fasta2Structure) for more information about Fasta2Structure.  
 **Remember, if you are using Fasta2Structure, please cite**:  
 [Fasta2Structure: a user-friendly tool for converting multiple aligned FASTA files to STRUCTURE format. Bessa-Silva A. BMC Bioinformatics. 2024 Feb 15;25(1):73. doi: 10.1186/s12859-024-05697-7. PMID: 38365590](https://pubmed.ncbi.nlm.nih.gov/38365590/)
 
 
-# Fasta2Structure-cli
-Fasta2Structure: A User-Friendly Tool for Converting Multiple Aligned FASTA Files to STRUCTURE Format, that is even more user-friendly because it doesn't need Tkinter and can thus run well anywhere, such as on a computer cluster or in Jupyter running remotely or in conjunction with software to make pipelines like Snakemake & NextFlow.  
+# improved_Fasta2Structure
+improved_Fasta2Structure: A User-Friendly Tool for Converting Multiple Aligned FASTA Files to STRUCTURE Format, that is even more user-friendly because it doesn't need a user to select files in a GUI (Tkinter-based) and can thus run well anywhere, such as on a computer cluster or in Jupyter running remotely or in conjunction with software to make pipelines like Snakemake & NextFlow. For those reasons, the improved script is more user-friendly for those familiar with computation and allows scaling up.  
 Plus, combined with Jupyter served by the MyBinder service it will make it easier for anyone to try the software or use it without installing anything on their own computer.  
 
-To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce Fasta2Structure-cli. It will run on the command line if you supply arguments specifying files as input or fallback to running on the command line if Tkinter cannot connect to a graphical display.    
-You can still try the original GUI-based (Tkinter) software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here.
+To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce improved_Fasta2Structure. It will run on the command line if you supply arguments specifying files as input or fallback to running on the command line if Tkinter cannot connect to a graphical display.    
+You can still try the original GUI-based (Tkinter) software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here and by requiring user interaction in a GUI wouldn't scale well.  
+**The improved script that I've provided here also retains the ability to run the GUI way as well**, and therefore with the improved version you have much greater flexibility and it truly is much more convenient to a larger audience of users.
 
-I have added a series of extensive tests to make sure the Fasta2Structure-cli gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure. 
+
+I have added a series of extensive tests to make sure the improved_Fasta2Structure gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure. 
 
 #### Background (from original source repo by Adam Bessa)
 
@@ -50,8 +52,8 @@ You can still try the original GUI-based (Tkinter) software presently available 
 -----------------------------------------------------------------------------------------
 
 
-JupyterLab interface: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/Fasta2Structure-cli/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)  
-Jupyter Notebook 7+:  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/Fasta2Structure-cli/main?urlpath=%2Ftree%2Findex.ipynb)
+JupyterLab interface: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)  
+Jupyter Notebook 7+:  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Ftree%2Findex.ipynb)
 
 
 
