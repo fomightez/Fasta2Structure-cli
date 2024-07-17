@@ -15,21 +15,17 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r binder/requirements.txt
-    - name: Check input file
+    - name: Prepare and run modified postBuild script
       run: |
-        ls -l Example_data/Results/Structure.str
-        cat Example_data/Results/Structure.str | head -n 5
-    - name: Display postBuild script contents
-      run: cat binder/postBuild
-    - name: Run postBuild script
-      run: |
-        pwd
-        ls -l Example_data/Results/
-        bash -x binder/postBuild
-      working-directory: ${{ github.workspace }}
-    - name: Check output file
-      run: |
-        ls -l Example_data/Results/EXPECTED_in_July2024_Structure.str
-        cat Example_data/Results/EXPECTED_in_July2024_Structure.str | head -n 5
+        echo "Current working directory: $PWD"
+        echo "GitHub workspace: $GITHUB_WORKSPACE"
+        echo "Contents of current directory:"
+        ls -la
+        echo "Contents of Example_data/Results:"
+        ls -la Example_data/Results
+        sed 's|cd ~|cd $GITHUB_WORKSPACE|g' binder/postBuild > modified_postBuild
+        chmod +x modified_postBuild
+        bash -x ./modified_postBuild
+  working-directory: ${{ github.workspace }}
     - name: Run improved script with conftest.py and run tests with pytest
       run: pytest -v tests/test_no_changes_introduced_to_results.py
