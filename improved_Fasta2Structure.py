@@ -274,8 +274,7 @@ fasta_extensions_allowed_text_for_help = "'" + "', '".join(fasta_extensions_allo
 parser.add_argument("input", nargs='+', help=f"FASTA file or files or directory \
     containing FASTA files. FASTA files in a directory (with extensions {fasta_extensions_allowed_text_for_help}) will be treated as if all of the filepaths for each had been provided when invoking the script. Multiple FASTA files provided in arguments will be processed in the same manner as if all selected at the same time by the GUI interface of the original `Fasta2Structure.py` NOTE: to get the output to match what the GUI gives, supply the filepaths as arguments left to rigth to match what the GUI would have top to bottom.", metavar="INPUT_FASTA")
 
-# Parse the arguments
-args = parser.parse_args()
+
 
 '''
 argparse automatically handles if user calls the script with `-h` or `--help` flag and prints the USAGE.
@@ -286,10 +285,14 @@ Other triggers for USAGE to display:
 The GUI will run if a graphical display can be connected to by Tkinter and the script is called with no arguments.
 '''
 
-# If the script is running in a terminal/on command line or in Jupyter run headlessly and so Tkinter cannot connect to a graphical display and no arguments are provided into the call to the script, then print general USAGE info
-if (not Tkinter_can_connect_to_graphical_display) and not args.input:
+# If the script is running in a terminal/on command line or in Jupyter run headlessly and so Tkinter cannot connect to a graphical display and no arguments are provided into the call to the script, then print general USAGE info and exit.
+# This should then remind user the paths of the file or files to act on need to 
+# be provided.
+if (not Tkinter_can_connect_to_graphical_display) and len(sys.argv) == 1:
     parser.print_help()
-    sys.exit(1)
+    print ("\n\n****---------------------------------------------------------------***")
+    print("The usage information has been printed above and the script exited\nwith an error below just to highlight that because you are running\nthis where the script can connect to a graphical display to show the\nuser interface, you need to specify files to act on as arguments in\nthe call invoking the script.\nTHAT IS THE ONLY 'ERROR' AT THIS TIME.\n****---------------------------------------------------------------***")
+    sys.exit(1)  #`sys.exit(0)` could be used to print usage and just end, but I worried why that triggered that may not be clear why for those new to running command line scripts. 
 
 
 
@@ -315,6 +318,8 @@ if Tkinter_can_connect_to_graphical_display and len(sys.argv) == 1:
     root.mainloop()
 # Since arguments were provided when the script, which we know because at this point we've already dealt with all the possibilities when no arguments provided, that is the file or directory the user wants to act on, and so we should continue on acting on that sticking to using stdin, stderr, and stdout for interaction. We don't need to concern ourselves with if Tkinter can connect to a graphical display because we should now have all the information that the windowed interface facilitates determining in the GUI situation.
 else:
+    # Parse the arguments
+    args = parser.parse_args()
     # The section handling the conversion without using Tkinter GUI, i.e. CLI mode section.
     # if more than one input file is provided, treat them as related, the way the
     # original file iterated on them with `for i, filepath in enumerate(filepaths):`
