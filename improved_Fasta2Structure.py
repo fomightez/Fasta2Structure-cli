@@ -292,7 +292,7 @@ if (not Tkinter_can_connect_to_graphical_display) and len(sys.argv) == 1:
     parser.print_help()
     print ("\n\n****---------------------------------------------------------------***")
     print("The usage information has been printed above and the script exited\nwith an error below just to highlight that because you are running\nthis where the script can connect to a graphical display to show the\nuser interface, you need to specify files to act on as arguments in\nthe call invoking the script.\nTHAT IS THE ONLY 'ERROR' AT THIS TIME.\n****---------------------------------------------------------------***")
-    sys.exit(1)  #`sys.exit(0)` could be used to print usage and just end, but I worried why that triggered that may not be clear why for those new to running command line scripts. 
+    sys.exit(1)  #`sys.exit(0)` could be used to print usage and just end, but I worry what triggered that occurence may not be clear for those new to running command line scripts, and so putting error at bottom that gets highlighted in pink in Jupyter should draw attention to bottom where note above will be put. 
 
 
 
