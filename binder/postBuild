@@ -11,7 +11,7 @@
 cd tests
 mkdir current_results_provided_by_Adam_Bessa && cd current_results_provided_by_Adam_Bessa
 curl -OL https://raw.githubusercontent.com/AdamBessa/Fasta2Structure/main/Example_data/Results/Structure.str
-cd .. # instead of using `cd ~` to get back to 'root' relative the repo, use relative move back up because this will also work in GitHub Actions where root relative repo content is much different than 'home'; setting to go 'home' alone is fine in MyBinder sessions but not github actions
+cd ../.. # instead of using `cd ~` to get back to 'root' relative the repo, use relative move back up because this will also work in GitHub Actions where root relative repo content is much different than 'home'; setting to go 'home' alone is fine in MyBinder sessions but not github actions
 
 # Make a version of provided results that actuall matches expected results.
 # Currently, in the issue https://github.com/AdamBessa/Fasta2Structure/issues/4 I point out
