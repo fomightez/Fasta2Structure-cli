@@ -22,6 +22,7 @@ I have added a series of extensive tests to make sure the improved_Fasta2Structu
 
 [![Validate Modified Script](https://github.com/fomightez/Fasta2Structure-cli/actions/workflows/validate_modified_script.yml/badge.svg)](https://github.com/fomightez/Fasta2Structure-cli/actions/workflows/validate_modified_script.yml)
 
+
 #### Background (from original source repo by Adam Bessa)
 
 The STRUCTURE software has gained popularity as a tool for population structure and genetic analysis. However, tailoring data to meet STRUCTURE's specific requirements can be challenging and prone to errors, particularly when managing multilocus data. Here, I introduce a graphical user interface (GUI) application designed to simplify the process of converting multiple sequence alignments into a single, cohesive file that is compatible with the STRUCTURE software. The application has been developed using Tkinter for the GUI and Biopython for handling FASTA files. It processes the files, identifies variable sites, and converts the sequences into a binary format. Subsequently, the sequences are concatenated and displayed within the graphical interface's text area, enabling users to review and verify the results. Furthermore, the program saves the concatenated results in a file, thereby providing a ready-to-use input for the STRUCTURE software. This application presents an efficient and reliable solution for transforming multiple aligned FASTA files into a concatenated binary format file, which is compatible with the STRUCTURE software. With its user-friendly graphical interface and error-reduction strategy, this tool proves to be invaluable for researchers engaged in population structure and genetic analysis. This program is designed to convert FASTA files into a binary representation that is then used to identify variable sites. This binary representation is then saved in a structure (.str) file. Variable sites are defined as positions in the sequence where the nucleotides differ among the sequences in the alignment. These sites are identified and flagged, and the resulting data is saved in a specific format that can be used for further analysis. The program allows users to select multiple FASTA files at once and performs the conversion of all selected files in the background. During the conversion, progress is indicated via a progress bar and a text label.
@@ -36,19 +37,9 @@ I have added a notebook that will open when the MyBinder session starts up that 
 
 ## Want to try the original without installing anything?
 
-You can still try the original GUI-based (Tkinter) software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here.
+You can still try the original GUI-based (Tkinter) software presently described & available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here.
 
 
-
-![image](https://github.com/AdamBessa/Fasta2Structure/assets/16911690/c5e83473-58d3-4206-ab7b-216f004cff3d)
-
-
-
-![image](https://github.com/AdamBessa/Fasta2Structure/assets/16911690/85827670-c6db-4463-b625-f4148fa56d3a)
-
-
-
-![image](https://github.com/AdamBessa/Fasta2Structure/assets/16911690/2f3363e9-4b9a-4c30-b53e-3969d9021a11)
 
 
 -----------------------------------------------------------------------------------------
