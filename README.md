@@ -20,7 +20,7 @@ You can still try the original GUI-based (Tkinter) software presently available 
 
 I have added a series of extensive tests to make sure the improved_Fasta2Structure gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure. The result of these tests are passing if the badge immediately below here is green:  
 
-![pytest_test_settings](https://github.com/fomightez/Fasta2Structure-cli/actions/workflows/pytest_test_settings.yml/badge.svg)
+![Validate Modified Script](https://github.com/fomightez/Fasta2Structure-cli/actions/workflows/validate_modified_script.yml/badge.svg)
 
 #### Background (from original source repo by Adam Bessa)
 
