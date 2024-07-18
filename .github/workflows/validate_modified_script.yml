@@ -1,4 +1,4 @@
-name: pytest_test_settings
+name: Validate Modified Script
 
 on: [push, pull_request]
 
