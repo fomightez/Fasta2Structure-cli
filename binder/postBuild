@@ -55,7 +55,7 @@ awk '{print $0 " "}' Example_data/Results/temp_unix.str > Example_data/Results/E
 rm Example_data/Results/temp_output.str
 rm Example_data/Results/temp_unix.str
 END_COMMENT
-
+echo "Processing Structure.str file to create EXPECTED_in_July2024_Structure.str"
 awk 'NR>1 {
     printf "%s", $1;
     for (i=3; i<=NF; i++) {
