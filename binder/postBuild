@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo "Starting postBuild script"
 
 
 
@@ -8,9 +8,13 @@
 # when I forked, to see if it has been updated in any way since I argue in an issue filed
 # at https://github.com/AdamBessa/Fasta2Structure/issues/4
 # that `Example_data/Results/Structure.str` doesn't actually match real results.
+echo "Changing to tests directory"
 cd tests
+echo "Creating directory for current results from Adam Bessa's repo"
 mkdir current_results_provided_by_Adam_Bessa && cd current_results_provided_by_Adam_Bessa
+echo "Downloading Structure.str file from Adam Bessa's repo"
 curl -OL https://raw.githubusercontent.com/AdamBessa/Fasta2Structure/main/Example_data/Results/Structure.str
+echo "Changing back to repository root"
 cd ../.. # instead of using `cd ~` to get back to 'root' relative the repo, use relative move back up because this will also work in GitHub Actions where root relative repo content is much different than 'home'; setting to go 'home' alone is fine in MyBinder sessions but not github actions
 
 # Make a version of provided results that actuall matches expected results.
@@ -30,6 +34,7 @@ cd ../.. # instead of using `cd ~` to get back to 'root' relative the repo, use 
 # MAKE THE PROVIDED FILE LIKE I EXPECT. So fallback was to check content equality ignoring 
 # whitespace anyway but this worked out process below got close.
 : <<'END_COMMENT' # This COMMENTED OUT section was way that worked but convoluted, BUT INCLUDES MANY USEFUL TRICKS, because done piecemeal and replaced with streamlined now after this 'here-document that is used as a multi-line comment' according to https://stackoverflow.com/a/46049228/8508004
+echo "Processing Structure.str file to create EXPECTED_in_July2024_Structure.str"
 awk 'NR>1 {
     printf "%s", $1;
     for (i=3; i<=NF; i++) {
@@ -107,3 +112,4 @@ awk 'NR>1 {
 # remove the `split_sequences` directory I used to unpack all in ITS.fas
 #rm -rf split_sequences
 #***---------------End of MAKE FOUR RELATED FASTA FILES------------------------------***#
+echo "postBuild script completed"
