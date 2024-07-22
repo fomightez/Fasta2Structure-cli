@@ -1,5 +1,8 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)
 
+*tl;dr:*  
+Click any `launch binder` badge on this page to get a session all set to step through running a Jupyter notebook demonstrating the script inside your browser with no installation needed. Or click [here](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb).
+
 ---------------
 Attribution
 ----------
@@ -16,6 +19,8 @@ Plus, combined with Jupyter served by the MyBinder service it will make it easie
 To make it more convenient to use, I've modified the Fasta2Structure script to allow more ways to run it to produce improved_Fasta2Structure. It will run on the command line if you supply arguments specifying files as input or fallback to running on the command line if Tkinter cannot connect to a graphical display.    
 You can still try the original GUI-based (Tkinter) software presently available at https://github.com/AdamBessa/Fasta2Structure without installing anything on your computer. You can go [here](https://gist.github.com/fomightez/e65761a066f56cbbc4c9b5b882c87380) and find a step-by-step to use a remote virtual desktop to test the Fasta2Structure script. Only you'll find it isn't as convenient as what is provided here and by requiring user interaction in a GUI wouldn't scale well.  
 **The improved script that I've provided here also retains the ability to run the GUI way as well**, and therefore with the improved version you have much greater flexibility and it truly is much more convenient to a larger audience of users.
+
+Click any `launch binder` badge on this page to get a session all set to step through running a Jupyter notebook demonstrating the script inside your browser with no installation needed. Or click [here](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb).
 
 
 I have added a series of extensive tests to make sure the improved_Fasta2Structure gives the same result as running the GUI-based (Tkinter) `Fasta2Structure.py` presently available at https://github.com/AdamBessa/Fasta2Structure. The result of these tests are passing if the badge immediately below here is green:  
@@ -44,9 +49,13 @@ You can still try the original GUI-based (Tkinter) software presently described 
 
 -----------------------------------------------------------------------------------------
 
+Click any `launch binder` badge on this page to get a session all set to step through running a Jupyter notebook demonstrating the script inside your browser with no installation needed. Or click [here](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb).
+
 
 JupyterLab interface: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb)  
 Jupyter Notebook 7+:  [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Ftree%2Findex.ipynb)
+
+
 
 
 
