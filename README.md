@@ -49,6 +49,7 @@ You can still try the original GUI-based (Tkinter) software presently described 
 
 -----------------------------------------------------------------------------------------
 
+Getting started:  
 Click any `launch binder` badge on this page to get a session all set to step through running a Jupyter notebook demonstrating the script inside your browser with no installation needed. Or click [here](https://mybinder.org/v2/gh/fomightez/improved_Fasta2Structure/main?urlpath=%2Flab%2Ftree%2Findex.ipynb).
 
 
